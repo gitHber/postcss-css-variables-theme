@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`postcss-css-variables-theme default option 1`] = `".a { color: #15c213; }"`;
+
+exports[`postcss-css-variables-theme defineThemeSelector is not effective with preserveInjectedVariables is false 1`] = `".a { color: #15c213; }body.theme-light .a { color: #15c; }"`;
+
+exports[`postcss-css-variables-theme defineThemeSelector with preserveInjectedVariables is true 1`] = `"body[light] { --primary-color: #15c; }body { --primary-color: #15c213; }.a { color: #15c213; }body.theme-light .a { color: #15c; }"`;
+
+exports[`postcss-css-variables-theme mutiple themes 1`] = `".a { color: #15c213; }body.theme-light .a { color: #9ae899; }body.theme-dark .a { color: #2a562a; }"`;
+
+exports[`postcss-css-variables-theme preserve: computed 1`] = `":root { --primary-color: blue; } .a { color: #15c213; }"`;
+
+exports[`postcss-css-variables-theme preserve: false 1`] = `".a { color: #15c213; }"`;
+
+exports[`postcss-css-variables-theme preserve: function 1`] = `
+"
+                :root {
+                    --primary-color: blue;
+                }
+                .a {
+                    color: #15c213;
+                    color: var(--primary-color);
+                    background-color: #15c;
+                }
+            "
+`;
+
+exports[`postcss-css-variables-theme preserve: true 1`] = `":root { --primary-color: blue; } .a { color: #15c213; color: var(--primary-color); }"`;
+
+exports[`postcss-css-variables-theme preserve:true mutiple themes 1`] = `".a { color: #15c213; color: var(--primary-color); }body.theme-light .a { color: #9ae899; color: var(--primary-color); }body.theme-dark .a { color: #2a562a; color: var(--primary-color); }"`;
+
+exports[`postcss-css-variables-theme preserveInjectedVariables 1`] = `
+"body { --primary-color: #15c213; }
+.a { color: #15c213; }"
+`;
+
+exports[`postcss-css-variables-theme themeSelector 1`] = `".a { color: #15c213; }.light .a { color: #15c; }"`;
