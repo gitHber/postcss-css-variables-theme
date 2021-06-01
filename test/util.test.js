@@ -18,4 +18,22 @@ describe('util', function () {
             },
         });
     });
+    test('generate selectorToTheme', async () => {
+        const variables = readThemeConfig(
+            require('path').resolve(__dirname, './theme.css'),
+            (theme) => `theme-${theme.slice(1)}`
+        );
+        expect(variables).toEqual({
+            '--primary-color': {
+                default: '#fe3666',
+                'theme-light': '#ff4906',
+                'theme-dark': '#906000',
+            },
+            '--primary-bgcolor': {
+                default: '#fe366620',
+                'theme-light': '#ff490620',
+                'theme-dark': '#90600020',
+            },
+        });
+    });
 });
