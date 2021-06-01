@@ -18,6 +18,16 @@ describe('postcss-css-variables-theme', function () {
         expect(css).toBe(`.a { color: #15c213; }`);
         expect(css).toMatchSnapshot();
     });
+    test('not exist', async () => {
+        const { css } = await compile(
+            `:root { --primary-color: blue; } .a { color: var(--primary-color); }`,
+            {
+                variables: {},
+            }
+        );
+        expect(css).toBe(`.a { color: var(--primary-color); }`);
+        expect(css).toMatchSnapshot();
+    });
     test('mutiple themes', async () => {
         const { css } = await compile(`.a { color: var(--primary-color); }`, {
             variables: {

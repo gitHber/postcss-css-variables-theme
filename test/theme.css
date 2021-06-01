@@ -1,0 +1,18 @@
+/**
+* write rule
+* body.theme-[name] {
+*    --[var-name]: [value-name]; 
+* }
+*/
+body {
+    --primary-color: #fe3666;
+    --primary-bgcolor: #fe366620;
+}
+body.theme-light {
+    --primary-color: #ff4906;
+    --primary-bgcolor: #ff490620;
+}
+body.theme-dark {
+    --primary-color: #906000;
+    --primary-bgcolor: #90600020;
+}

@@ -2344,6 +2344,11 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
+postcss-css-variables-theme@^0.0.1-beta.1:
+  version "0.0.1-beta.1"
+  resolved "https://npm.corp.kuaishou.com/postcss-css-variables-theme/-/postcss-css-variables-theme-0.0.1-beta.1.tgz#e3d799a5e057e5c1f167effe52f99567b41bc25a"
+  integrity sha512-BfQlJbQu9LIUGQOSPnHmY9jmdn/DndU08kGYHkEekwsVsac+j45EvLfum21mppo/DhpdgkdRWtlBoceNU9EDPw==
+
 postcss@^7.x:
   version "7.0.35"
   resolved "https://npm.corp.kuaishou.com/postcss/-/postcss-7.0.35.tgz#d2be00b998f7f211d8a276974079f2e92b970e24"

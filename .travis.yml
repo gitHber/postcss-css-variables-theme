@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+    - 'stable'
+install:
+    - npm install
+    - npm install -g codecov
+script:
+    - npm run test
+branches:
+    only:
+        - master
+after_success:
+    - codecov

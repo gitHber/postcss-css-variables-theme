@@ -1,5 +1,7 @@
 # postcss-css-variables-theme
 
+[![npm version](https://badge.fury.io/js/postcss-css-variables-theme.svg)](http://badge.fury.io/js/postcss-css-variables-theme) [![Build Status](https://travis-ci.org/gitHber/postcss-css-variables-theme.svg)](https://travis-ci.org/github/gitHber/postcss-css-variables-theme) [![codecov](https://codecov.io/gh/gitHber/postcss-css-variables-theme/branch/master/graph/badge.svg)](https://codecov.io/gh/gitHber/postcss-css-variables-theme)
+
 Just like postcss-css-variables but support multiple theme class
 [postcss-css-variables](https://github.com/MadLittleMods/postcss-css-variables/blob/v0.17.0/README.md)
 
@@ -20,7 +22,7 @@ Just like postcss-css-variables but support multiple theme class
             light: '#fff', // theme: light
             dark: '#000', // theme: dark
         },
-        '--secondary-color': '#aef',
+        '--secondary-color': '#aef', // default
     },
     /**
      * prifix of multiple theme selector
@@ -45,6 +47,49 @@ Just like postcss-css-variables but support multiple theme class
         return `body.theme-${theme}`;
     },
 };
+```
+
+## Generate variables
+
+you can generate variables just by \*.css, there is util function can help you
+theme.css
+
+```css
+/**
+* write rule
+* body.theme-[name] {
+*    --[var-name]: [value-name]; 
+* }
+*/
+body {
+    --primary-color: #fe3666;
+    --primary-bgcolor: #fe366620;
+}
+body.theme-light {
+    --primary-color: #ff4906;
+    --primary-bgcolor: #ff490620;
+}
+body.theme-dark {
+    --primary-color: #906000;
+    --primary-bgcolor: #90600020;
+}
+```
+
+```js
+const { readThemeConfig } = require('postcss-css-variables-theme/util');
+readThemeConfig(require('path').resolve(__dirname, './theme.css'));
+// {
+//     '--primary-color': {
+//         default: '#fe3666',
+//         light: '#ff4906',
+//         dark: '#906000',
+//     },
+//     '--primary-bgcolor': {
+//         default: '#fe366620',
+//         light: '#ff490620',
+//         dark: '#90600020',
+//     },
+// }
 ```
 
 # examples

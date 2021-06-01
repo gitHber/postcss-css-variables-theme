@@ -8,6 +8,8 @@ exports[`postcss-css-variables-theme defineThemeSelector with preserveInjectedVa
 
 exports[`postcss-css-variables-theme mutiple themes 1`] = `".a { color: #15c213; }body.theme-light .a { color: #9ae899; }body.theme-dark .a { color: #2a562a; }"`;
 
+exports[`postcss-css-variables-theme not exist 1`] = `".a { color: var(--primary-color); }"`;
+
 exports[`postcss-css-variables-theme preserve: computed 1`] = `":root { --primary-color: blue; } .a { color: #15c213; }"`;
 
 exports[`postcss-css-variables-theme preserve: false 1`] = `".a { color: #15c213; }"`;
