@@ -3,15 +3,17 @@
  * @param {*} path
  * @returns
  */
-exports.readThemeConfig = (path) => {
+exports.readThemeConfig = (
+    path,
+    selectorToTheme = (selector) => selector.slice(1)
+) => {
     let variables = {};
     let content = require('fs').readFileSync(path, { encoding: 'utf8' });
     content = content.replace(/\n/g, '');
-    const reg =
-        /body(\.theme-([^{\s]*))?\s*{((\s*(--[0-9a-zA-Z-]*):\s*([^;]*);)*)}/g;
+    const reg = /body(\.[^{\s]*)?\s*{((\s*(--[0-9a-zA-Z-]*):\s*([^;]*);)*)}/g;
     let pattern;
     while ((pattern = reg.exec(content))) {
-        const [classStr, themeSelector, theme, decls] = pattern;
+        const [classStr, selector, decls] = pattern;
         const declReg = /(--[0-9a-zA-Z-]*):\s*([^;]*);/g;
         let declPattern;
         while ((declPattern = declReg.exec(decls))) {
@@ -19,7 +21,8 @@ exports.readThemeConfig = (path) => {
             if (!variables[prop]) {
                 variables[prop] = {};
             }
-            variables[prop][theme || 'default'] = value;
+            variables[prop][selector ? selectorToTheme(selector) : 'default'] =
+                value;
         }
     }
     return variables;

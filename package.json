@@ -1,6 +1,6 @@
 {
     "name": "postcss-css-variables-theme",
-    "version": "0.0.1-beta.2",
+    "version": "0.0.1-beta.3",
     "description": "Just like postcss-css-variables but support multiple theme class",
     "main": "index.js",
     "scripts": {

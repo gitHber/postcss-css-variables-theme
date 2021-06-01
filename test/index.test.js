@@ -39,7 +39,7 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `.a { color: #15c213; }body.theme-light .a { color: #9ae899; }body.theme-dark .a { color: #2a562a; }`
+            `.a { color: #15c213; }body.light .a { color: #9ae899; }body.dark .a { color: #2a562a; }`
         );
         expect(css).toMatchSnapshot();
     });
@@ -55,7 +55,7 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `.a { color: #15c213; color: var(--primary-color); }body.theme-light .a { color: #9ae899; color: var(--primary-color); }body.theme-dark .a { color: #2a562a; color: var(--primary-color); }`
+            `.a { color: #15c213; color: var(--primary-color); }body.light .a { color: #9ae899; color: var(--primary-color); }body.dark .a { color: #2a562a; color: var(--primary-color); }`
         );
         expect(css).toMatchSnapshot();
     });
@@ -179,7 +179,7 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `.a { color: #15c213; }body.theme-light .a { color: #15c; }`
+            `.a { color: #15c213; }body.light .a { color: #15c; }`
         );
         expect(css).toMatchSnapshot();
     });
@@ -198,7 +198,7 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `body[light] { --primary-color: #15c; }body { --primary-color: #15c213; }.a { color: #15c213; }body.theme-light .a { color: #15c; }`
+            `body[light] { --primary-color: #15c; }body { --primary-color: #15c213; }.a { color: #15c213; }body.light .a { color: #15c; }`
         );
         expect(css).toMatchSnapshot();
     });

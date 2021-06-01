@@ -22,7 +22,7 @@ const defaultOption = {
      * @param {*} theme 主题
      * @returns
      */
-    themeSelector: (theme, selector) => `body.theme-${theme} ${selector}`,
+    themeSelector: (theme, selector) => `body.${theme} ${selector}`,
     /**
      * 插件会自动生成 :root {--var: value}
      * 设置成false，不会保留，需要用户自己提前设置好
@@ -37,7 +37,7 @@ const defaultOption = {
      */
     defineThemeSelector: (theme) => {
         if (theme === 'default') return 'body';
-        return `body.theme-${theme}`;
+        return `body.${theme}`;
     },
 };
 

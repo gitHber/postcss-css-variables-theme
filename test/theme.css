@@ -8,11 +8,11 @@ body {
     --primary-color: #fe3666;
     --primary-bgcolor: #fe366620;
 }
-body.theme-light {
+body.light {
     --primary-color: #ff4906;
     --primary-bgcolor: #ff490620;
 }
-body.theme-dark {
+body.dark {
     --primary-color: #906000;
     --primary-bgcolor: #90600020;
 }

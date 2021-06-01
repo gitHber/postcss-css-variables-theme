@@ -28,9 +28,9 @@ Just like postcss-css-variables but support multiple theme class
      * prifix of multiple theme selector
      * @param {*} selector
      * @param {*} theme
-     * @returns `body.theme-${theme} ${selector}`
+     * @returns `body.${theme} ${selector}`
      */
-    themeSelector: (theme, selector) => `body.theme-${theme} ${selector}`,
+    themeSelector: (theme, selector) => `body.${theme} ${selector}`,
     /**
      * true: generate variables defination
      * false(default): do nothing
@@ -44,7 +44,7 @@ Just like postcss-css-variables but support multiple theme class
      */
     defineThemeSelector: (theme) => {
         if (theme === 'default') return 'body';
-        return `body.theme-${theme}`;
+        return `body.${theme}`;
     },
 };
 ```
@@ -57,7 +57,7 @@ theme.css
 ```css
 /**
 * write rule
-* body.theme-[name] {
+* body.[name] {
 *    --[var-name]: [value-name]; 
 * }
 */
@@ -65,11 +65,11 @@ body {
     --primary-color: #fe3666;
     --primary-bgcolor: #fe366620;
 }
-body.theme-light {
+body.light {
     --primary-color: #ff4906;
     --primary-bgcolor: #ff490620;
 }
-body.theme-dark {
+body.dark {
     --primary-color: #906000;
     --primary-bgcolor: #90600020;
 }
@@ -148,10 +148,10 @@ readThemeConfig(require('path').resolve(__dirname, './theme.css'));
 .a {
     color: #15c213;
 }
-body.theme-light .a {
+body.light .a {
     color: #9ae899;
 }
-body.theme-dark .a {
+body.dark .a {
     color: #2a562a;
 }
 ```
@@ -396,7 +396,7 @@ body {
 .a {
     color: #15c213;
 }
-body.theme-light .a {
+body.light .a {
     color: #15c;
 }
 ```
