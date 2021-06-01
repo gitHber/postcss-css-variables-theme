@@ -33,5 +33,9 @@
     },
     "dependencies": {
         "postcss-css-variables-theme": "^0.0.1-beta.1"
+    },
+    "jest": {
+        "coverageDirectory": "./coverage/",
+        "collectCoverage": true
     }
 }
