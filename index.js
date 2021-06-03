@@ -35,7 +35,7 @@ const defaultOption = {
      * @param {*} theme 主题
      * @returns
      */
-    defineThemeSelector: (theme) => {
+    themeDefineSelector: (theme) => {
         if (theme === 'default') return 'body';
         return `body.${theme}`;
     },
@@ -50,7 +50,7 @@ module.exports = postcss.plugin(
             preserve,
             themeSelector,
             preserveInjectedVariables,
-            defineThemeSelector,
+            themeDefineSelector,
         } = options;
         return function (css) {
             // 稍后删除的节点
@@ -75,7 +75,8 @@ module.exports = postcss.plugin(
                     const preserveNode = node.clone();
                     preserveNode._preserve = true; // 标识这个被保留的节点
                     node._preserveNode = preserveNode; // 标识源节点的保留节点
-                    node.parent.insertAfter(node, preserveNode);
+                    node.parent.insertBefore(node, preserveNode);
+                    node = preserveNode;
                 }
                 node.value = node.value.replace(variable, value);
             };
@@ -84,19 +85,19 @@ module.exports = postcss.plugin(
              * @param {*} node
              * @param {*} preserve
              */
-            const removeVariables = (node) => {
+            const removeVariables = (declNode) => {
                 let preserveDecl;
-                const declParentRule = node.parent;
+                const ruleNode = declNode.parent;
                 if (typeof preserve === 'function') {
-                    preserveDecl = preserve(node);
+                    preserveDecl = preserve(declNode);
                 } else {
                     preserveDecl = preserve;
                 }
                 if (!preserveDecl) {
-                    node.remove();
+                    declNode.remove();
                 }
-                if (declParentRule.nodes.length === 0) {
-                    nodesToRemoveAtEnd.push(declParentRule);
+                if (ruleNode.nodes.length === 0) {
+                    nodesToRemoveAtEnd.push(ruleNode);
                 }
             };
             /**
@@ -113,7 +114,7 @@ module.exports = postcss.plugin(
                 let node = defineRulesMap.get(theme);
                 if (!node) {
                     node = new postcss.rule({
-                        selector: defineThemeSelector(theme),
+                        selector: themeDefineSelector(theme),
                     });
                     node._properties = new Set();
                     defineRulesMap.set(theme, node);
@@ -129,13 +130,13 @@ module.exports = postcss.plugin(
                 }
             };
 
-            css.walkDecls((node) => {
+            css.walkDecls((declNode) => {
                 // 变量定义处理
-                if (node.prop.startsWith('--')) {
-                    removeVariables(node);
+                if (declNode.prop.startsWith('--')) {
+                    removeVariables(declNode);
                     return;
                 }
-                let decl = node.value;
+                let decl = declNode.value;
                 // css property
                 if (decl.includes('var(')) {
                     let pattern;
@@ -146,18 +147,13 @@ module.exports = postcss.plugin(
                         // 单个主题，直接替换
                         if (typeof config === 'string') {
                             defineVariables(property, config);
-                            replaceVariables(node, patternStr, config);
+                            replaceVariables(declNode, patternStr, config);
                         } else if (typeof config === 'object') {
                             // 多个主题，生成node
-                            const declParentRule = node.parent;
-                            if (
-                                declParentRule &&
-                                declParentRule.type === 'rule'
-                            ) {
-                                if (
-                                    !declParentRule._theme &&
-                                    !declParentRule._relatedThemeNodeMap
-                                ) {
+                            const ruleNode = declNode.parent;
+                            if (ruleNode && ruleNode.type === 'rule') {
+                                // 原css rule
+                                if (!ruleNode._theme) {
                                     Object.entries(config).forEach(
                                         ([theme, value]) => {
                                             // 添加变量定义
@@ -167,46 +163,62 @@ module.exports = postcss.plugin(
                                                 theme
                                             );
                                             if (theme === 'default') return;
-                                            let themeNodes = new Map();
                                             // the theme brother node of rule node
                                             if (
-                                                declParentRule._relatedThemeNodeMap
+                                                !ruleNode._relatedThemeRuleNodeMap
                                             ) {
-                                                themeNodes =
-                                                    declParentRule._relatedThemeNodeMap;
+                                                ruleNode._relatedThemeRuleNodeMap =
+                                                    new Map();
                                             }
-                                            if (!themeNodes.has(theme)) {
-                                                const node =
-                                                    declParentRule.clone();
+                                            // 最后插入的主题rule
+                                            if (!ruleNode._lastThemeRuleNode) {
+                                                ruleNode._lastThemeRuleNode =
+                                                    ruleNode;
+                                            }
+                                            const themeNodes =
+                                                ruleNode._relatedThemeRuleNodeMap;
+                                            let themeRuleNode =
+                                                themeNodes.get(theme);
+                                            if (!themeRuleNode) {
+                                                themeRuleNode =
+                                                    new postcss.rule({
+                                                        selectors:
+                                                            ruleNode.selectors.map(
+                                                                (selector) =>
+                                                                    themeSelector(
+                                                                        theme,
+                                                                        selector
+                                                                    )
+                                                            ),
+                                                    });
                                                 // define what theme is node belong to
-                                                node._theme = theme;
+                                                themeRuleNode._theme = theme;
                                                 // add prefix to selector
-                                                node.selectors =
-                                                    node.selectors.map(
-                                                        (selector) =>
-                                                            themeSelector(
-                                                                theme,
-                                                                selector
-                                                            )
-                                                    );
-                                                themeNodes.set(theme, node);
-                                                declParentRule.parent.push(
-                                                    node
+                                                themeNodes.set(
+                                                    theme,
+                                                    themeRuleNode
                                                 );
+                                                ruleNode.parent.insertAfter(
+                                                    ruleNode._lastThemeRuleNode,
+                                                    themeRuleNode
+                                                );
+                                                ruleNode._lastThemeRuleNode =
+                                                    themeRuleNode;
                                             }
-                                            declParentRule._relatedThemeNodeMap =
-                                                themeNodes;
+                                            themeRuleNode.push(
+                                                declNode.clone()
+                                            );
                                         }
                                     );
                                 }
                                 // 主题节点
                                 replaceVariables(
-                                    node,
+                                    declNode,
                                     patternStr,
-                                    config[declParentRule._theme || 'default']
+                                    config[ruleNode._theme || 'default']
                                 );
                             } else {
-                                node.error('decl Without rule!!');
+                                declNode.error('decl Without rule!!');
                             }
                         }
                     }

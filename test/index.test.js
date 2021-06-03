@@ -39,7 +39,7 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `.a { color: #15c213; }body.light .a { color: #9ae899; }body.dark .a { color: #2a562a; }`
+            `.a { color: #15c213; }\nbody.light .a { color: #9ae899; }\nbody.dark .a { color: #2a562a; }`
         );
         expect(css).toMatchSnapshot();
     });
@@ -55,7 +55,7 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `.a { color: #15c213; color: var(--primary-color); }body.light .a { color: #9ae899; color: var(--primary-color); }body.dark .a { color: #2a562a; color: var(--primary-color); }`
+            `.a { color: #15c213; color: var(--primary-color); }\nbody.light .a { color: #9ae899; color: var(--primary-color); }\nbody.dark .a { color: #2a562a; color: var(--primary-color); }`
         );
         expect(css).toMatchSnapshot();
     });
@@ -151,7 +151,7 @@ describe('postcss-css-variables-theme', function () {
                 },
             },
         });
-        expect(css).toBe(`.a { color: #15c213; }.light .a { color: #15c; }`);
+        expect(css).toBe(`.a { color: #15c213; }\n.light .a { color: #15c; }`);
         expect(css).toMatchSnapshot();
     });
 
@@ -167,10 +167,10 @@ describe('postcss-css-variables-theme', function () {
         );
         expect(css).toMatchSnapshot();
     });
-    test('defineThemeSelector is not effective with preserveInjectedVariables is false', async () => {
+    test('themeDefineSelector is not effective with preserveInjectedVariables is false', async () => {
         const { css } = await compile(`.a { color: var(--primary-color); }`, {
             preserveInjectedVariables: false,
-            defineThemeSelector: (theme) => `body[${theme}]`,
+            themeDefineSelector: (theme) => `body[${theme}]`,
             variables: {
                 '--primary-color': {
                     default: '#15c213',
@@ -179,14 +179,14 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `.a { color: #15c213; }body.light .a { color: #15c; }`
+            `.a { color: #15c213; }\nbody.light .a { color: #15c; }`
         );
         expect(css).toMatchSnapshot();
     });
-    test('defineThemeSelector with preserveInjectedVariables is true', async () => {
+    test('themeDefineSelector with preserveInjectedVariables is true', async () => {
         const { css } = await compile(`.a { color: var(--primary-color); }`, {
             preserveInjectedVariables: true,
-            defineThemeSelector: (theme) => {
+            themeDefineSelector: (theme) => {
                 if (theme === 'default') return 'body';
                 return `body[${theme}]`;
             },
@@ -198,7 +198,29 @@ describe('postcss-css-variables-theme', function () {
             },
         });
         expect(css).toBe(
-            `body[light] { --primary-color: #15c; }body { --primary-color: #15c213; }.a { color: #15c213; }body.light .a { color: #15c; }`
+            `body[light] { --primary-color: #15c; }\nbody { --primary-color: #15c213; }\n.a { color: #15c213; }\nbody.light .a { color: #15c; }`
+        );
+        expect(css).toMatchSnapshot();
+    });
+    test('theme extra prop will be remove', async () => {
+        const { css } = await compile(
+            `.a { color: var(--primary-color); font-size: 14px; background-color: var(--secondary-color); }`,
+            {
+                variables: {
+                    '--primary-color': {
+                        default: '#ccc',
+                        light: '#fff',
+                        dark: '#000',
+                    },
+                    '--secondary-color': {
+                        default: '#eee',
+                        happy: '#15c213',
+                    },
+                },
+            }
+        );
+        expect(css).toBe(
+            `.a { color: #ccc; font-size: 14px; background-color: #eee; }\nbody.light .a { color: #fff; }\nbody.dark .a { color: #000; }\nbody.happy .a { background-color: #15c213; }`
         );
         expect(css).toMatchSnapshot();
     });

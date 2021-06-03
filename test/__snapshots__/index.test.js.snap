@@ -2,11 +2,11 @@
 
 exports[`postcss-css-variables-theme default option 1`] = `".a { color: #15c213; }"`;
 
-exports[`postcss-css-variables-theme defineThemeSelector is not effective with preserveInjectedVariables is false 1`] = `".a { color: #15c213; }body.light .a { color: #15c; }"`;
-
-exports[`postcss-css-variables-theme defineThemeSelector with preserveInjectedVariables is true 1`] = `"body[light] { --primary-color: #15c; }body { --primary-color: #15c213; }.a { color: #15c213; }body.light .a { color: #15c; }"`;
-
-exports[`postcss-css-variables-theme mutiple themes 1`] = `".a { color: #15c213; }body.light .a { color: #9ae899; }body.dark .a { color: #2a562a; }"`;
+exports[`postcss-css-variables-theme mutiple themes 1`] = `
+".a { color: #15c213; }
+body.light .a { color: #9ae899; }
+body.dark .a { color: #2a562a; }"
+`;
 
 exports[`postcss-css-variables-theme not exist 1`] = `".a { color: var(--primary-color); }"`;
 
@@ -29,11 +29,37 @@ exports[`postcss-css-variables-theme preserve: function 1`] = `
 
 exports[`postcss-css-variables-theme preserve: true 1`] = `":root { --primary-color: blue; } .a { color: #15c213; color: var(--primary-color); }"`;
 
-exports[`postcss-css-variables-theme preserve:true mutiple themes 1`] = `".a { color: #15c213; color: var(--primary-color); }body.light .a { color: #9ae899; color: var(--primary-color); }body.dark .a { color: #2a562a; color: var(--primary-color); }"`;
+exports[`postcss-css-variables-theme preserve:true mutiple themes 1`] = `
+".a { color: #15c213; color: var(--primary-color); }
+body.light .a { color: #9ae899; color: var(--primary-color); }
+body.dark .a { color: #2a562a; color: var(--primary-color); }"
+`;
 
 exports[`postcss-css-variables-theme preserveInjectedVariables 1`] = `
 "body { --primary-color: #15c213; }
 .a { color: #15c213; }"
 `;
 
-exports[`postcss-css-variables-theme themeSelector 1`] = `".a { color: #15c213; }.light .a { color: #15c; }"`;
+exports[`postcss-css-variables-theme theme extra prop will be remove 1`] = `
+".a { color: #ccc; font-size: 14px; background-color: #eee; }
+body.light .a { color: #fff; }
+body.dark .a { color: #000; }
+body.happy .a { background-color: #15c213; }"
+`;
+
+exports[`postcss-css-variables-theme themeDefineSelector is not effective with preserveInjectedVariables is false 1`] = `
+".a { color: #15c213; }
+body.light .a { color: #15c; }"
+`;
+
+exports[`postcss-css-variables-theme themeDefineSelector with preserveInjectedVariables is true 1`] = `
+"body[light] { --primary-color: #15c; }
+body { --primary-color: #15c213; }
+.a { color: #15c213; }
+body.light .a { color: #15c; }"
+`;
+
+exports[`postcss-css-variables-theme themeSelector 1`] = `
+".a { color: #15c213; }
+.light .a { color: #15c; }"
+`;

@@ -42,7 +42,7 @@ Just like postcss-css-variables but support multiple theme class
      * @param {*} theme
      * @returns
      */
-    defineThemeSelector: (theme) => {
+    themeDefineSelector: (theme) => {
         if (theme === 'default') return 'body';
         return `body.${theme}`;
     },
@@ -358,14 +358,14 @@ body {
 }
 ```
 
-## defineThemeSelector (preserveInjectedVariables must be true)
+## themeDefineSelector (preserveInjectedVariables must be true)
 
 ### option
 
 ```js
 {
     preserveInjectedVariables: true,
-    defineThemeSelector: (theme) => {
+    themeDefineSelector: (theme) => {
         if (theme === 'default') return 'body';
         return `body[${theme}]`;
     },
